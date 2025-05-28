@@ -213,12 +213,12 @@ if __name__ == "__main__":
     parser.add_argument('--camera_path', default='/home/HiPose_Online_mahjong/output/dataset/camera.json')
     parser.add_argument('--Class_CorresPoint_path', default='/home/HiPose_Online_mahjong/output/dataset/models_GT_color/Class_CorresPoint000001.txt')
     parser.add_argument('--region_bit', type=int, default=10)
-    parser.add_argument('--rgb_path', default='/home/HiPose_Online_mahjong/output/dataset/test/rgb')
-    parser.add_argument('--depth_path', default='/home/HiPose_Online_mahjong/output/dataset/test/depth')
-    parser.add_argument('--output_video', type=str, default="/home/HiPose_Online_mahjong/output_video_real_pcd.mp4")
+    parser.add_argument('--rgb_path', default='/home/HiPose_Online_mahjong/output/dataset/test/rgb_eight_instances_demo_1')
+    parser.add_argument('--depth_path', default='/home/HiPose_Online_mahjong/output/dataset/test/depth_eight_instances_demo_1')
+    parser.add_argument('--output_video', type=str, default="/home/HiPose_Online_mahjong/output_eight_instances_demo_1_pcd.avi")
     parser.add_argument('--fps', type=int, default=30)
-    parser.add_argument('--frame_width', type=int, default=1920)
-    parser.add_argument('--frame_height', type=int, default=1080)
+    parser.add_argument('--frame_width', type=int, default=640)
+    parser.add_argument('--frame_height', type=int, default=360)
     args = parser.parse_args()
 
     detection_model = load_yolo_model(args.yolo_path)
@@ -256,8 +256,8 @@ if __name__ == "__main__":
     frame_width, frame_height = args.frame_width, args.frame_height
     fps = args.fps
     
-    # Use MP4V codec for better compatibility
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    # Use XVID codec for AVI format
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_height))
     
     if not video_writer.isOpened():
