@@ -2,7 +2,7 @@
 
 本仓库用于物体位姿估计演示，介绍了一个实现物体位姿估计的数据生成/训练/部署的流程。基于 [ultralitc](https://github.com/uzh-rpg/ultralitc)以及[HiPose](https://github.com/lyltc1/HiPose) 项目，用于四川麻将牌位姿估计。
 
-> **所有相关代码、模型、脚本和数据可在公司内网 NAS `/Home/prj-mt/林永良数据/` 下载。以下用【云盘地址】指代该地址**
+> **所有相关代码、模型、脚本和数据可在[百度云](https://pan.baidu.com/s/11zwgrygs7210UBUZWFpXxg?pwd=ai5t) 下载。以下用【云盘地址】指代该地址**
 
 ## 目录
 
@@ -61,6 +61,8 @@ blenderproc debug examples/datasets/bop_challenge/main_sichuan_far.py path/to/bo
 
 将 BOP 数据集转换为 ultralitic 所需格式，转换脚本见 `云盘地址/ultralitic_script/data/detection_bop_converter.py`。
 
+我们也提供了转化后的仿真以及真实拍摄的图片以及标签，见`云盘地址/data/*train_dataset.zip`
+
 训练和测试脚本参考 `云盘地址/ultralitic_script/train_det.py` 和 `云盘地址/ultralitic_script/test_det.py`。
 
 训练完成的模型文件见 `云盘地址/ckpt/yolo11_wan7.pt`。
@@ -68,6 +70,7 @@ blenderproc debug examples/datasets/bop_challenge/main_sichuan_far.py path/to/bo
 ## 训练位姿估计模型
 
 参考 [HiPose 项目](https://github.com/lyltc1/HiPose)，建议使用 Docker 环境以避免依赖问题。训练 wan7 数据集时，请将 `云盘地址/HiPose_script` 文件夹下的同名文件替换 `HiPose` 文件夹，主要是增加一些配置文件等。
+其中安装了bop_toolkit，请将`云盘地址/bop_toolkit_script`文件夹下面的同名文件进行替换。
 
 训练及验证流程详见 [HiPose 项目文档](https://github.com/lyltc1/HiPose)。
 

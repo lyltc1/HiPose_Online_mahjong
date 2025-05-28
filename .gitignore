@@ -14,7 +14,6 @@ __pycache__/
 *README_.md
 docker/opencv*.zip
 docker/opengl/
-docker/normalSpeed/
 output/*
 *.mp4
 *.avi

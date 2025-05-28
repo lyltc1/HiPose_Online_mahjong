@@ -3,7 +3,7 @@
 ## Download the image
 We provide an image that can be downloaded using the command below.
 ```
-docker pull lyltc1/hipose_online:latest
+docker pull lyltc1/hipose_online:mahjong-1.0
 ```
 ## Build images
 Options: you can build the image by yourself.
