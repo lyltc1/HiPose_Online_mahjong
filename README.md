@@ -1,36 +1,38 @@
 # HiPose_Online_mahjong
 
-本仓库用于物体位姿估计演示，介绍了一个实现物体位姿估计的数据生成/训练/部署的流程。基于 [ultralitc](https://github.com/uzh-rpg/ultralitc)以及[HiPose](https://github.com/lyltc1/HiPose) 项目，用于四川麻将牌位姿估计。
+[中文说明 (Chinese Version)](README_CN.md)
 
-> **所有相关代码、模型、脚本和数据可在[百度云](https://pan.baidu.com/s/11zwgrygs7210UBUZWFpXxg?pwd=ai5t) 下载。以下用【云盘地址】指代该地址**
+This repository is for object pose estimation demonstration, introducing a workflow for data generation, training, and deployment of object pose estimation. It is based on [ultralitc](https://github.com/uzh-rpg/ultralitc) and [HiPose](https://github.com/lyltc1/HiPose) projects, and is used for pose estimation of Sichuan Mahjong tiles.
 
-## 目录
+> **All related code, models, scripts, and data can be downloaded from [Baidu Cloud](https://pan.baidu.com/s/11zwgrygs7210UBUZWFpXxg?pwd=ai5t). The term [Cloud Address] below refers to this link.**
 
-1. [准备物体模型文件](#准备物体模型文件)
-2. [生成BOP格式数据集](#生成bop格式数据集)
-3. [训练检测模型](#训练检测模型)
-4. [训练位姿估计模型](#训练位姿估计模型)
-5. [部署](#部署)
+## Table of Contents
 
-## 准备物体模型文件
+1. [Prepare Object Model Files](#prepare-object-model-files)
+2. [Generate BOP Format Dataset](#generate-bop-format-dataset)
+3. [Train Detection Model](#train-detection-model)
+4. [Train Pose Estimation Model](#train-pose-estimation-model)
+5. [Deployment](#deployment)
 
-我们提供以下模型文件：
+## Prepare Object Model Files
 
-- `云盘地址/bop/wan7.zip`：仅包含麻将牌“7万”的模型
-- `云盘地址/bop/sichuan.zip`：包含四川麻将所有牌的模型
+We provide the following model files:
 
-后续检测模型将对所有四川麻将牌进行检测，位姿估计仅针对“7万”牌。
+- `[Cloud Address]/bop/wan7.zip`: Contains only the "7 Wan" Mahjong tile model
+- `[Cloud Address]/bop/sichuan.zip`: Contains models for all Sichuan Mahjong tiles
 
-**下载步骤：**
+The detection model will detect all Sichuan Mahjong tiles, while pose estimation is only for the "7 Wan" tile.
 
-1. 下载 `云盘地址/bop` 文件夹  
-3. 解压文件：
+**Download steps:**
+
+1. Download the `[Cloud Address]/bop` folder  
+2. Unzip the files:
     ```bash
     unzip wan7.zip -d wan7
     unzip sichuan.zip -d sichuan
     ```
 
-**解压后目录结构如下：**
+**After extraction, the directory structure is as follows:**
 ```
 bop/
 ├── sichuan/
@@ -39,54 +41,53 @@ bop/
     └── models/
 ```
 
-## 生成BOP格式数据集
+## Generate BOP Format Dataset
 
-1. 安装 BlenderProc 渲染库，安装方法详见 [BlenderProc](https://github.com/DLR-RM/BlenderProc) 官方文档。
-2. 下载 `云盘地址/blenderproc_script` 脚本并复制到`blenderproc`文件夹中。
-3. 在`blenderproc`文件夹中运行 `blenderproc download cc_textures` 下载纹理资源。
+1. Install the BlenderProc rendering library. See the [BlenderProc](https://github.com/DLR-RM/BlenderProc) official documentation for installation instructions.
+2. Download the `[Cloud Address]/blenderproc_script` script and copy it to the `blenderproc` folder.
+3. In the `blenderproc` folder, run `blenderproc download cc_textures` to download texture resources.
 
-**生成数据集命令示例：**
+**Example commands to generate datasets:**
 ```bash
-# 生成 7万 数据集
+# Generate 7 Wan dataset
 blenderproc debug examples/datasets/bop_challenge/main_7wan_upright.py /path/to/bop/ resources/cctextures examples/datasets/bop_challenge/output --num_scenes=2000
 
-# 生成四川麻将（近距离）数据集
+# Generate Sichuan Mahjong (near distance) dataset
 blenderproc debug examples/datasets/bop_challenge/main_sichuan_near.py /path/to/bop/ resources/cctextures examples/datasets/bop_challenge/output --num_scenes=2000
 
-# 生成四川麻将（远距离）数据集
+# Generate Sichuan Mahjong (far distance) dataset
 blenderproc debug examples/datasets/bop_challenge/main_sichuan_far.py path/to/bop/ resources/cctextures examples/datasets/bop_challenge/output --num_scenes=2000
 ```
 
-## 训练检测模型
+## Train Detection Model
 
-将 BOP 数据集转换为 ultralitic 所需格式，转换脚本见 `云盘地址/ultralitic_script/data/detection_bop_converter.py`。
+Convert the BOP dataset to the format required by ultralitic. The conversion script is at `[Cloud Address]/ultralitic_script/data/detection_bop_converter.py`.
 
-我们也提供了转化后的仿真以及真实拍摄的图片以及标签，见`云盘地址/data/*train_dataset.zip`
+We also provide converted simulation and real images and labels at `[Cloud Address]/data/*train_dataset.zip`.
 
-训练和测试脚本参考 `云盘地址/ultralitic_script/train_det.py` 和 `云盘地址/ultralitic_script/test_det.py`。
+Refer to `[Cloud Address]/ultralitic_script/train_det.py` and `[Cloud Address]/ultralitic_script/test_det.py` for training and testing scripts.
 
-训练完成的模型文件见 `云盘地址/ckpt/yolo11_wan7.pt`。
+The trained model file can be found at `[Cloud Address]/ckpt/yolo11_wan7.pt`.
 
-## 训练位姿估计模型
+## Train Pose Estimation Model
 
-参考 [HiPose 项目](https://github.com/lyltc1/HiPose)，建议使用 Docker 环境以避免依赖问题。训练 wan7 数据集时，请将 `云盘地址/HiPose_script` 文件夹下的同名文件替换 `HiPose` 文件夹，主要是增加一些配置文件等。
-其中安装了bop_toolkit，请将`云盘地址/bop_toolkit_script`文件夹下面的同名文件进行替换。
+Refer to the [HiPose project](https://github.com/lyltc1/HiPose). It is recommended to use a Docker environment to avoid dependency issues. When training the wan7 dataset, replace files in the `HiPose` folder with those in `[Cloud Address]/HiPose_script` (mainly to add configuration files, etc.).
+The `bop_toolkit` is installed; please replace files in the `HiPose` folder with those in `[Cloud Address]/bop_toolkit_script` as needed.
 
-训练及验证流程详见 [HiPose 项目文档](https://github.com/lyltc1/HiPose)。
+For detailed training and validation procedures, see the [HiPose project documentation](https://github.com/lyltc1/HiPose).
 
-训练完成的模型文件见 `云盘地址/ckpt/HiPose_wan7_0_9051step164000`。
+The trained model file can be found at `[Cloud Address]/ckpt/HiPose_wan7_0_9051step164000`.
 
-## 部署
+## Deployment
 
-本仓库提供了部署用 Docker 镜像，需在容器中配置相机参数。已集成 ultralitic 和 HiPose 的部署代码，移除了训练相关内容。具体可参考 `云盘地址/HiPose_Online_mahjong/test_yolo.py` 和 `云盘地址/HiPose_Online_mahjong/test_hipose_real_3D_video.py`。
+This repository provides a Docker image for deployment. Camera parameters need to be configured in the container. The deployment code for ultralitic and HiPose is integrated, with training-related content removed. See `[Cloud Address]/HiPose_Online_mahjong/test_yolo.py` and `[Cloud Address]/HiPose_Online_mahjong/test_hipose_real_3D_video.py` for details.
 
-下载测试数据（约9.3G），见`云盘地址/data`文件夹。首先下载相机参数文件，`云盘地址/data/camera.json`是真实数据的相机内参，`云盘地址/data/camera_pbr.json`是仿真数据的相机内参。然后下载测试视频，`云盘地址/data/sequence_*.zip `是不同的序列，包含不同测试用例。
+Download test data (about 9.3G) from the `[Cloud Address]/data` folder. First, download the camera parameter files: `[Cloud Address]/data/camera.json` is for real data, and `[Cloud Address]/data/camera_pbr.json` is for simulated data. Then download the test videos: `[Cloud Address]/data/sequence_*.zip` are different sequences containing various test cases.
 
-
-以下测试代码可读取保存的视频序列并输出可视化结果：
+The following test code can read saved video sequences and output visualization results:
 ```bash
 python test_yolo.py
 python test_hipose_real_3D_video.py
 ```
 
-保存的视频结果见 `云盘地址/output` 文件夹。
+The saved video results can be found in the `[Cloud Address]/output` folder.
